@@ -7,6 +7,30 @@ interface StudentTableProps {
   onUpdate: (id: string, admission: string, remark: string) => Promise<void>;
 }
 
+// Helper to format date from ISO/YMD string to dd-mm-yyyy
+const formatDate = (dateString: string) => {
+  if (!dateString) return 'N/A';
+  
+  // Try to parse YYYY-MM-DD pattern first to avoid timezone shifts from ISO strings
+  const match = dateString.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (match) {
+    const [_, year, month, day] = match;
+    return `${day}-${month}-${year}`;
+  }
+
+  // Fallback for other formats
+  try {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return dateString;
+    const d = String(date.getDate()).padStart(2, '0');
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const y = date.getFullYear();
+    return `${d}-${m}-${y}`;
+  } catch (e) {
+    return dateString;
+  }
+};
+
 const StudentCard: React.FC<{ student: Student; onUpdate: (id: string, admission: string, remark: string) => Promise<void> }> = ({ student, onUpdate }) => {
   const [admission, setAdmission] = useState(student.AdmissionDetailed || '');
   const [remark, setRemark] = useState(student.Remark || '');
@@ -71,7 +95,7 @@ const StudentCard: React.FC<{ student: Student; onUpdate: (id: string, admission
             <Calendar className="w-3.5 h-3.5 mr-2 text-gray-400" />
             <span className="font-medium text-gray-900">{student.Age} Years</span>
             <span className="mx-2 text-gray-300">|</span>
-            <span className="text-gray-500">{student.DOB || 'N/A'}</span>
+            <span className="text-gray-500">{formatDate(student.DOB)}</span>
           </div>
 
           <div className="col-span-2 flex items-center text-gray-600">
