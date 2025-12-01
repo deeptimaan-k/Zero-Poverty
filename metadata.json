@@ -1,0 +1,5 @@
+{
+  "name": "Gram Panchayat Student Dashboard",
+  "description": "A dashboard to manage and analyze student data organized by Gram Panchayat, featuring AI insights and Google Sheets integration guidance.",
+  "requestFramePermissions": []
+}
